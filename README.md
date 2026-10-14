@@ -10,13 +10,12 @@
 
 ## 同事首次安装（只做一次）
 
-前置条件：电脑上装有 Node.js 和 Git，并且你的 GitHub 账号已被邀请为本仓库的协作者（私有仓库，需要权限）。
+前置条件：电脑上装有 Node.js 和 Git。如果仓库是私有的，还需要你的 GitHub 账号已被邀请为协作者；公共仓库无需账号，直接装。
 
 ```bash
-npx skills add <仓库地址> -g
+npx skills add https://github.com/xuanzi-dev/hongke-skills -g
 ```
 
-> 仓库地址找管理员获取，形如 `https://github.com/<用户名>/hongke-skills`。
 > 安装时会拉取仓库中全部技能；如果只要其中某一个，按提示选择即可。
 
 ## 以后同步更新
@@ -34,12 +33,12 @@ npx skills update
 ## 常见问题
 
 **Q：`npx skills add` 提示权限不足 / 仓库不存在？**
-私有仓库走的是你本机的 Git 凭据。先确认：
+先确认仓库是公共还是私有。私有仓库走的是你本机的 Git 凭据：
 1. 你的 GitHub 账号已被加为仓库协作者（在 GitHub 通知邮件里点接受邀请）；
-2. 本机已配置 GitHub 凭据（执行 `git ls-remote <仓库地址>` 能通即可；不通就先按 GitHub 提示登录，推荐用 GitHub CLI `gh auth login` 或配置 Personal Access Token）。
+2. 本机已配置 GitHub 凭据（执行 `git ls-remote https://github.com/xuanzi-dev/hongke-skills` 能通即可；不通就先按 GitHub 提示登录，推荐用 GitHub CLI `gh auth login` 或配置 Personal Access Token）。
 
 **Q：更新后 Kimi 里没看到变化？**
-新开一个会话再试；仍不行就 `npx skills remove hongke-doc-style -g` 后重新 `npx skills add <仓库地址> -g`。
+新开一个会话再试；仍不行就 `npx skills remove hongke-doc-style -g` 后重新 `npx skills add https://github.com/xuanzi-dev/hongke-skills -g`。
 
 **Q：想提修改建议？**
 直接在群里反馈给管理员，由管理员统一修改发布，避免多人同时改动冲突。
