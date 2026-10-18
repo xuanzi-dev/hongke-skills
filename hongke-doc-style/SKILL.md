@@ -1,6 +1,6 @@
 ---
 name: hongke-doc-style
-description: 鸿科（HONGKE）品牌风格的流程/SOP文档、流程图与PPT说明书编写规范。当鸿科用户要求梳理流程、制定SOP、编写流程文档、画流程图、做鸿科风格的PPT（安装/匹配说明书、演示文档），或要求文档/图片/PPT"按鸿科风格""参照公司PPT风格"时使用。覆盖品牌配色（橙#E78F13系，PPT标题橙#E2931E）、docx样式约定、白底无填充流程图规范（每框标注责任人）、SOP标准章节框架、PPT说明书版式（16:9黑体+波浪背景+橙色序号方块章节页），以及"先研究→与用户讨论→确认后再执行"的协作方式（对PPT任务同样适用）。触发词示例："梳理一下流程"、"制定SOP"、"画个流程图"、"按我们的风格出文档"、"把责任人写上去"、"根据我这个PPT的风格做一份说明书"、"做一份安装/匹配说明书PPT"。
+description: 鸿科（HONGKE）品牌风格的流程/SOP文档、流程图与PPT说明书编写规范。当鸿科用户要求梳理流程、制定SOP、编写流程文档、画流程图、做鸿科风格的PPT（安装/匹配说明书、演示文档），或要求文档/图片/PPT"按鸿科风格""参照公司PPT风格"时使用。覆盖品牌配色（橙#E78F13系，PPT标题橙#E2931E）、docx样式约定、白底无填充流程图规范（每框标注责任人，docx 用 PNG 版、PPT 内为原生可编辑形状版，禁止贴图）、SOP标准章节框架、PPT说明书版式（16:9黑体+波浪背景+橙色序号方块章节页），以及"先研究→与用户讨论→确认后再执行"的协作方式（对PPT任务同样适用）。触发词示例："梳理一下流程"、"制定SOP"、"画个流程图"、"按我们的风格出文档"、"把责任人写上去"、"根据我这个PPT的风格做一份说明书"、"做一份安装/匹配说明书PPT"。
 ---
 
 # 鸿科文档风格（hongke-doc-style）
@@ -35,6 +35,7 @@ SOP 类文档按 [references/sop-framework.md](references/sop-framework.md) 的�
 1. **先解析源 PPT，不凭截图猜**：用 python-pptx 读出幻灯片尺寸、各页版式、字体字号、色值、背景图与 logo 素材，再汇报研究结论和页面大纲，等用户确认（工作方式第 3 条）。
 2. **风格常量**取自 [references/brand-style.md](references/brand-style.md) 的"PPT 风格"一节；若用户提供了新的鸿科 PPT 源文件，以从该文件解析出的值为准并更新该节。
 3. **构建与交付的技术坑**（不要直接在 WPS 源文件上改、iPhone MPO 照片先转 JPEG、照片先压缩、逐页渲染 PNG 自检）见 `ppt-file-delivery` 技能的 Pitfalls，动手前必读。
+4. **PPT 内流程图必须可编辑（2026-10-18 新增铁律）**：PPT 里的流程图一律用 `scripts/pptx_flowchart.py` 生成**原生形状**（圆角矩形框、连接线箭头、文本框），**禁止贴 PNG**——用户要能在 WPS/PowerPoint 里直接编辑文字、拖动框体、改颜色。PNG 流程图（`flowchart.py`）只用于 docx/SOP 文档。两份脚本共用同一份 spec.json。
 
 ## 流程图脚本
 
@@ -45,3 +46,13 @@ python3 scripts/flowchart.py spec.json 输出路径.png
 ```
 
 spec.json 定义画布、框（含责任人）、箭头、备注，脚本内置鸿科配色与白底无填充样式。spec 示例见脚本顶部注释。生成后打开图片检查文字不溢出、不重叠，再交付。
+
+PPT 里要放流程图时，用 [scripts/pptx_flowchart.py](scripts/pptx_flowchart.py)（同一份 spec.json，输出 PPT 原生形状）：
+
+```bash
+python scripts/pptx_flowchart.py spec.json 输出.pptx
+```
+
+- 输出文件不存在：新建只有该流程图页的单页 16:9 文稿；已存在（python-pptx 从零构建的主文档）：追加一页
+- 旁边会自动生成 `输出.预览.png`（flowchart.py 渲染），检查文字不溢出、不重叠后交付，预览图可删
+- 框/箭头/文字全部是原生可编辑对象，交付前确认没有把流程图整页贴成图片
