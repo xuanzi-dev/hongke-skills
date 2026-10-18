@@ -243,10 +243,18 @@ def main():
     prs.save(out_path)
     print(f"saved: {out_path}（{'追加一页' if append else '新建单页演示文稿'}）")
 
-    # 预览 PNG：直接调用 flowchart.py，保证与 matplotlib 版视觉一致
+    # 预览 PNG：调用 flowchart.py，保证与 matplotlib 版视觉一致。
+    # flowchart.py 在 hongke-doc-style 技能里（两技能随同一仓库安装，互为兄弟目录）；
+    # 找不到时跳过预览并提示。
     preview = os.path.splitext(out_path)[0] + ".预览.png"
-    flowchart = os.path.join(os.path.dirname(os.path.abspath(__file__)), "flowchart.py")
-    subprocess.run([sys.executable, flowchart, spec_path, preview], check=True)
+    here = os.path.dirname(os.path.abspath(__file__))
+    candidates = [os.path.join(here, "flowchart.py"),
+                  os.path.join(here, "..", "..", "hongke-doc-style", "scripts", "flowchart.py")]
+    flowchart = next((c for c in candidates if os.path.exists(c)), None)
+    if flowchart:
+        subprocess.run([sys.executable, flowchart, spec_path, preview], check=True)
+    else:
+        print("warning: 未找到 flowchart.py，跳过预览 PNG 生成", file=sys.stderr)
 
 
 if __name__ == "__main__":
